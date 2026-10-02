@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this code or benchmark, please cite the paper."
+title: "FAN-TTA: Feature Anchor Networks for frozen-detector streaming test-time adaptation"
+authors:
+  - family-names: Sumit
+    given-names: Shahriar Shakir
+  - family-names: Tahtali
+    given-names: Murat
+  - family-names: Mirjalili
+    given-names: Seyedali
+version: 1.0.0
+license: MIT
+repository-code: "https://github.com/ShahriarShakirSumit/FAN-TTA"
+preferred-citation:
+  type: conference-paper
+  title: "When TTA Meets Frozen Detectors: A Benchmark and Feature-Anchoring Solution for Streaming Object Detection"
+  authors:
+    - family-names: Sumit
+      given-names: Shahriar Shakir
+    - family-names: Tahtali
+      given-names: Murat
+    - family-names: Mirjalili
+      given-names: Seyedali
+  collection-title: "Proceedings of the 18th Asian Conference on Machine Learning (ACML 2026)"
+  publisher:
+    name: "PMLR"
+  year: 2026

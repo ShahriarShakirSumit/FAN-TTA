@@ -1,0 +1,84 @@
+adaptation:
+  base_lr: 0.0001
+  input_adapt_threshold: 0.3
+  max_steps: 5
+data:
+  dataset: coco_person
+  dataset_dir: ./data/coco2017
+  min_area: 100.0
+diagnosis:
+  anchor_warmup: 100
+  buffer_size: 200
+  extract_features: false
+  fusion: any
+experiment_name: gamma_correct__mixed_shifts__s42
+fan:
+  candidate_layers:
+  - 2
+  - 4
+  - 6
+  channel_selectivity_threshold: 0.3
+  conf_gate_threshold: -1
+  confidence_gate: true
+  ema_alpha: 0.05
+  hysteresis_frames: 5
+  max_correction_ratio: 4.0
+  min_anchor_frames: 4
+  min_correction_distance: 0.05
+  noise_blur_ksize: 3
+  noise_blur_min_ratio: 5.0
+  noise_blur_sigma: 0.5
+  strength_scale: 0.4
+model:
+  conf_threshold: 0.25
+  device: cuda:0
+  imgsz: 640
+  iou_threshold: 0.45
+  name: yolov8s.pt
+output_dir: outputs/runs
+restoration:
+  denoise_method: cascade
+  enable_compound: true
+  enable_confidence_gate: true
+  nlm_h_scale: 1.0
+router:
+  budget_per_window: 10.0
+  cooldown_frames: 10
+  cost_aware: true
+seed: 42
+strategy: gamma_correct
+stream:
+  scenario:
+    segments:
+    - family: none
+      length: 200
+      severity: 0.0
+    - family: gaussian_noise
+      length: 150
+      severity: 0.5
+    - family: none
+      length: 100
+      severity: 0.0
+    - family: fog
+      length: 150
+      severity: 0.6
+    - family: none
+      length: 100
+      severity: 0.0
+    - family: brightness
+      length: 150
+      severity: 0.7
+    - family: none
+      length: 100
+      severity: 0.0
+    - family: gaussian_blur
+      length: 150
+      severity: 0.5
+    - family: none
+      length: 200
+      severity: 0.0
+    type: mixed
+  window_size: 32
+tta:
+  lr: 0.001
+  steps: 1

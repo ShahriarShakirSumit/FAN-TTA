@@ -1,0 +1,97 @@
+# V7: FAN — Gaussian noise severity 0.3
+experiment_name: "v7_noise_0_3"
+seed: 42
+strategy: "fan"
+output_dir: "./outputs"
+
+data:
+  dataset: "coco_person"
+  dataset_dir: "./data/coco2017"
+  images_dir: "./data/coco2017/val2017"
+  annotations_file: "./data/coco2017/annotations/instances_val2017.json"
+  min_area: 100.0
+  num_images: null
+
+model:
+  name: "yolov8s.pt"
+  device: "cuda:0"
+  imgsz: 640
+  conf_threshold: 0.25
+  iou_threshold: 0.45
+  verbose: false
+
+stream:
+  window_size: 32
+  warmup_frames: 0
+  scenario:
+    type: "abrupt"
+    clean_before: 300
+    shift_length: 300
+    clean_after: 300
+    shift_family: "gaussian_noise"
+    severity: 0.3
+
+router:
+  input_drift_threshold: 0.3
+  output_drift_threshold: 0.3
+  feature_drift_threshold: 0.3
+  mild_severity: 0.3
+  moderate_severity: 0.6
+  severe_threshold: 0.8
+  cooldown_frames: 10
+  cost_aware: true
+  budget_per_window: 10.0
+  cost_weight: 0.3
+
+diagnosis:
+  buffer_size: 200
+  anchor_warmup: 100
+  extract_features: false
+  monitor_signals:
+    - brightness_mean
+    - confidence_mean
+    - detection_count
+  fusion: "any"
+
+adaptation:
+  input_adapt_threshold: 0.3
+  base_lr: 0.0001
+  max_steps: 5
+  grad_clip: 1.0
+
+fan:
+  candidate_layers: [2, 4, 6]
+  ema_alpha: 0.05
+  strength_scale: 0.4
+  min_anchor_frames: 4
+  max_correction_ratio: 4.0
+  channel_selectivity_threshold: 0.3
+  min_correction_distance: 0.05
+  noise_blur_sigma: 0.5
+  noise_blur_ksize: 3
+  # FAN v4 additions
+  noise_blur_min_ratio: 5.0
+  hysteresis_frames: 5
+  confidence_gate: true
+  conf_gate_threshold: -1
+
+restoration:
+  denoise_method: "cascade"
+  nlm_h_scale: 1.0
+  enable_confidence_gate: true
+  enable_compound: true
+
+tta:
+  lr: 0.001
+  steps: 1
+  episodic: false
+  fisher_alpha: 2000
+  ema_decay: 0.999
+  num_augmentations: 4
+  sam_rho: 0.05
+  bn_alpha: 0.5
+  memory_size: 256
+
+baseline:
+  period: 50
+  budget: 3

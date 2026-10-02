@@ -1,0 +1,88 @@
+adaptation:
+  base_lr: 0.0001
+  grad_clip: 1.0
+  input_adapt_threshold: 0.3
+  max_steps: 5
+baseline:
+  budget: 3
+  period: 50
+data:
+  annotations_file: ./data/coco2017/annotations/instances_val2017.json
+  dataset: coco_person
+  dataset_dir: ./data/coco2017
+  images_dir: ./data/coco2017/val2017
+  min_area: 100.0
+  num_images: null
+diagnosis:
+  anchor_warmup: 100
+  buffer_size: 200
+  extract_features: false
+  fusion: any
+  monitor_signals:
+  - brightness_mean
+  - confidence_mean
+  - detection_count
+experiment_name: repro_fig1_fan
+fan:
+  candidate_layers:
+  - 2
+  - 4
+  - 6
+  channel_selectivity_threshold: 0.3
+  conf_gate_threshold: -1
+  confidence_gate: true
+  ema_alpha: 0.05
+  hysteresis_frames: 5
+  max_correction_ratio: 4.0
+  min_anchor_frames: 4
+  min_correction_distance: 0.05
+  noise_blur_ksize: 3
+  noise_blur_min_ratio: 5.0
+  noise_blur_sigma: 0.5
+  strength_scale: 0.4
+model:
+  conf_threshold: 0.25
+  device: cuda:0
+  imgsz: 640
+  iou_threshold: 0.45
+  name: yolov8s.pt
+  verbose: false
+output_dir: outputs/runs
+restoration:
+  denoise_method: cascade
+  enable_compound: true
+  enable_confidence_gate: true
+  nlm_h_scale: 1.0
+router:
+  budget_per_window: 10.0
+  cooldown_frames: 10
+  cost_aware: true
+  cost_weight: 0.3
+  feature_drift_threshold: 0.3
+  input_drift_threshold: 0.3
+  mild_severity: 0.3
+  moderate_severity: 0.6
+  output_drift_threshold: 0.3
+  severe_threshold: 0.8
+seed: 42
+strategy: fan
+stream:
+  scenario:
+    clean_after: 300
+    clean_before: 300
+    severity: 0.9
+    shift_family: gaussian_noise
+    shift_length: 300
+    type: abrupt
+  warmup_frames: 0
+  window_size: 32
+tta:
+  bn_alpha: 0.5
+  ema_decay: 0.999
+  episodic: false
+  fisher_alpha: 2000
+  lr: 0.001
+  memory_size: 256
+  num_augmentations: 4
+  sam_rho: 0.05
+  steps: 1

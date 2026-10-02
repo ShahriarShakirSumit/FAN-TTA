@@ -1,0 +1,88 @@
+# SDMR Base Configuration
+# Signal-Driven Model Refresh for Streaming Object Detection
+# NeurIPS 2026
+
+experiment_name: sdmr_base
+strategy: sdmr       # sdmr | no_adapt | periodic_ft | bn_adapt | oracle | random | threshold
+seed: 42
+
+# --- Output ---
+output_dir: outputs
+
+# --- Model (Ultralytics YOLO) ---
+model:
+  name: yolov8s.pt          # yolov8n.pt, yolov8s.pt, yolov8m.pt, yolov8l.pt
+  conf_threshold: 0.25
+  iou_threshold: 0.45
+  device: cuda:0
+  half: false
+  source_checkpoint: null    # path to source-domain checkpoint for reset
+
+# --- Data ---
+data:
+  mode: synthetic            # synthetic | coco | voc | custom
+  height: 640
+  width: 640
+  # Dataset paths (for non-synthetic mode)
+  # train_path: /path/to/train
+  # val_path: /path/to/val
+  # ann_path: /path/to/annotations
+
+# --- Stream Configuration ---
+stream:
+  n_frames: 1000
+  shift_scenarios:
+    - type: abrupt
+      onset: 200
+      shift_type: brightness
+      severity: 0.6
+    - type: gradual
+      onset: 500
+      duration: 100
+      shift_type: gaussian_noise
+      severity: 0.5
+    - type: abrupt
+      onset: 800
+      shift_type: fog
+      severity: 0.7
+
+# --- Diagnosis ---
+diagnosis:
+  buffer_size: 100
+  change_point:
+    fusion: majority         # any | majority | weighted
+    monitor_signals:
+      - brightness_mean
+      - confidence_mean
+      - detection_count
+      - feat_agg_mean
+      - feat_agg_sparsity
+
+# --- Router (SDMR strategy) ---
+router:
+  input_drift_threshold: 0.3
+  output_drift_threshold: 0.3
+  feature_drift_threshold: 0.3
+  mild_severity: 0.3
+  moderate_severity: 0.6
+  severe_threshold: 0.8
+  cooldown_frames: 10
+  cost_aware: false
+  budget_per_window: 10.0
+  cost_weight: 0.3
+
+# --- Adaptation ---
+adaptation:
+  base_lr: 0.0001
+  weight_decay: 0.0001
+  max_grad_norm: 1.0
+
+# --- Baseline overrides (when strategy != sdmr) ---
+baseline: {}
+  # For periodic_ft:
+  #   period: 50
+  #   budget: 10
+  # For threshold:
+  #   signal_key: confidence_mean
+  #   threshold: 0.3
+  #   comparison: below

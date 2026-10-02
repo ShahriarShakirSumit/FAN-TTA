@@ -1,0 +1,22 @@
+# Versions used for every re-run reported in the paper (Python 3.11.5, CUDA 11.8, one NVIDIA V100 32 GB).
+# PyTorch with CUDA 11.8:  pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu118
+torch==2.0.1
+torchvision==0.15.2
+ultralytics==8.0.196
+numpy==1.26.4
+scipy==1.17.1
+pandas==3.0.5
+scikit-learn==1.9.0
+scikit-image==0.26.0
+opencv-python==4.11.0.86
+pillow==12.3.0
+PyYAML==6.0.3
+tqdm==4.70.0
+loguru==0.7.3
+ruptures==1.1.10
+xgboost==3.2.0
+filelock==3.32.5
+matplotlib==3.11.1
+seaborn==0.13.2
+# tests
+pytest==9.1.1

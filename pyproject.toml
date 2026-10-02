@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fan-tta"
+version = "1.0.0"
+description = "Feature Anchor Networks and the frozen-detector streaming TTA benchmark (ACML 2026)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Shahriar Shakir Sumit"}, {name = "Murat Tahtali"}, {name = "Seyedali Mirjalili"}]
+
+[tool.setuptools.packages.find]
+include = ["sdmr*"]

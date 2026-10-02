@@ -1,0 +1,73 @@
+# Ablation: Severity sweep with multiple shift types
+# Tests SDMR across different corruption severities
+
+experiment_name: ablation_severity_sweep
+strategy: sdmr
+seed: 42
+output_dir: outputs
+
+model:
+  name: yolov8s.pt
+  conf_threshold: 0.25
+  iou_threshold: 0.45
+  device: cuda:0
+  half: false
+
+data:
+  mode: synthetic
+  height: 640
+  width: 640
+
+stream:
+  n_frames: 2000
+  shift_scenarios:
+    # Mild shifts
+    - type: abrupt
+      onset: 100
+      shift_type: brightness
+      severity: 0.2
+    # Moderate shifts  
+    - type: abrupt
+      onset: 400
+      shift_type: gaussian_noise
+      severity: 0.5
+    # Severe shifts
+    - type: abrupt
+      onset: 700
+      shift_type: fog
+      severity: 0.8
+    # Gradual shift
+    - type: gradual
+      onset: 1000
+      duration: 200
+      shift_type: contrast
+      severity: 0.6
+    # Recurring shift
+    - type: recurring
+      onset: 1400
+      shift_type: motion_blur
+      severity: 0.5
+
+diagnosis:
+  buffer_size: 100
+  change_point:
+    fusion: majority
+    monitor_signals:
+      - brightness_mean
+      - confidence_mean
+      - detection_count
+      - blur_score
+      - noise_estimate
+
+router:
+  input_drift_threshold: 0.3
+  output_drift_threshold: 0.3
+  feature_drift_threshold: 0.3
+  mild_severity: 0.3
+  moderate_severity: 0.6
+  severe_threshold: 0.8
+  cooldown_frames: 10
+  cost_aware: false
+
+adaptation:
+  base_lr: 0.0001

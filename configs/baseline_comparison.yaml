@@ -1,0 +1,62 @@
+# Baseline comparison: run all baselines on the same stream
+# Use with --strategy override to compare
+
+experiment_name: baseline_comparison
+seed: 42
+output_dir: outputs
+
+model:
+  name: yolov8s.pt
+  conf_threshold: 0.25
+  iou_threshold: 0.45
+  device: cuda:0
+
+data:
+  mode: synthetic
+  height: 640
+  width: 640
+
+stream:
+  n_frames: 1000
+  shift_scenarios:
+    - type: abrupt
+      onset: 200
+      shift_type: brightness
+      severity: 0.6
+    - type: gradual
+      onset: 500
+      duration: 100
+      shift_type: gaussian_noise
+      severity: 0.5
+    - type: abrupt
+      onset: 800
+      shift_type: fog
+      severity: 0.7
+
+# Strategies to run (use run_all_baselines.sh):
+# sdmr, no_adapt, periodic_ft, bn_adapt, oracle, random, threshold
+
+# Override baseline params per strategy:
+# periodic_ft baseline:
+baseline:
+  period: 50
+  budget: 10
+
+diagnosis:
+  buffer_size: 100
+  change_point:
+    fusion: majority
+    monitor_signals:
+      - brightness_mean
+      - confidence_mean
+      - detection_count
+
+router:
+  input_drift_threshold: 0.3
+  output_drift_threshold: 0.3
+  feature_drift_threshold: 0.3
+  cooldown_frames: 10
+  cost_aware: false
+
+adaptation:
+  base_lr: 0.0001

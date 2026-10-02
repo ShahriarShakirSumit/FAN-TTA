@@ -1,0 +1,69 @@
+# Recurring blur shift experiment (simulates dirtied camera lens)
+experiment_name: "coco_recurring_blur"
+seed: 42
+strategy: "sdmr"
+output_dir: "./outputs"
+
+data:
+  dataset: "coco_person"
+  dataset_dir: "./data/coco2017"
+  min_area: 100.0
+
+model:
+  name: "yolov8s.pt"
+  device: "cuda:0"
+  imgsz: 640
+  conf_threshold: 0.25
+  iou_threshold: 0.45
+
+stream:
+  window_size: 32
+  scenario:
+    type: "recurring"
+    num_cycles: 4
+    clean_length: 150
+    shift_length: 100
+    shift_family: "gaussian_blur"
+    severity: 0.6
+
+router:
+  cost_aware: true
+  budget_per_window: 10.0
+  cooldown_frames: 10
+
+diagnosis:
+  buffer_size: 200
+  anchor_warmup: 100
+  extract_features: false
+  fusion: "any"
+
+adaptation:
+  input_adapt_threshold: 0.3
+  base_lr: 0.0001
+  max_steps: 5
+
+restoration:
+  denoise_method: "cascade"
+  nlm_h_scale: 1.0
+  enable_confidence_gate: true
+  enable_compound: true
+
+tta:
+  lr: 0.001
+  steps: 1
+
+# FAN v4 hyperparameters
+fan:
+  candidate_layers: [2, 4, 6]
+  ema_alpha: 0.05
+  strength_scale: 0.4
+  min_anchor_frames: 4
+  max_correction_ratio: 4.0
+  channel_selectivity_threshold: 0.3
+  min_correction_distance: 0.05
+  noise_blur_sigma: 0.5
+  noise_blur_ksize: 3
+  noise_blur_min_ratio: 5.0
+  hysteresis_frames: 5
+  confidence_gate: true
+  conf_gate_threshold: -1
