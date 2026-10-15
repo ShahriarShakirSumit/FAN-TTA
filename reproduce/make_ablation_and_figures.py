@@ -33,7 +33,11 @@ print(f"ablation: blur default {db:.2f} no-adapt {nb:.2f} spread {max(spread_b)-
 
 # ---- seed-42 strategy bar + heatmap (single execution per strategy) ----
 MS = json.load(open(ART / "multiseed_v13_5strat.json")); CP = json.load(open(ART / "comprehensive_v6v9v10_results.json"))
-C = list(MS); S = ["fan", "tent", "eata", "cotta", "sar", "rotta", "bn_adapt", "periodic_ft"]
+# heatmap rows follow the order of the labels in E
+C = ["noise_0_3", "noise_0_5", "noise_0_7", "noise_0_9", "noise_1_0", "blur_0_5", "blur_0_7", "blur_0_9", "brightness_0_7",
+     "brightness_0_9", "contrast_0_7", "fog_0_7", "gradual_brightness", "recurring_blur", "mixed_shifts"]
+assert sorted(C) == sorted(MS)
+S = ["fan", "tent", "eata", "cotta", "sar", "rotta", "bn_adapt", "periodic_ft"]
 D = {"fan": "FAN (ours)", "tent": "TENT", "eata": "EATA", "cotta": "CoTTA", "sar": "SAR", "rotta": "RoTTA", "bn_adapt": "BN Adapt", "periodic_ft": "Periodic FT"}
 E = ["Noise 0.3", "Noise 0.5", "Noise 0.7", "Noise 0.9", "Noise 1.0", "Blur 0.5", "Blur 0.7", "Blur 0.9", "Bright 0.7", "Bright 0.9", "Contrast 0.7", "Fog 0.7", "Gradual", "Recurring", "Mixed"]
 def val(c, s): return MS[c][s]["42"] if s in ("fan", "tent", "eata", "bn_adapt", "no_adapt") else CP[c][s]["ap50"] * 100
