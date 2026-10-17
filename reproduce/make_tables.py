@@ -78,7 +78,7 @@ S = ["\\begin{table}[t]", "\\centering", "\\caption{Frozen-compatible input-spac
      "FAN's three-seed means (one-sided Wilcoxon, $n = 15$); the others use seed 42 and are compared with FAN's seed-42 run. Reference means: "
      f"FAN {out['fan3_mean']:.2f} (three seeds) and {out['fan_s42_mean']:.2f} (seed 42); No Adapt {mean(m3(c,'no_adapt') for c in C):.2f} and "
      f"{mean(V[c]['no_adapt'] for c in C):.2f}.}}", "\\label{tab:input_baselines}", "\\small", "\\begin{tabular}{lccccc}", "\\toprule",
-     "Baseline & Seeds & Mean AP50 & FAN $-$ baseline & FAN wins & Beats No Adapt \\\\", "\\midrule"]
+     "Baseline & Seeds & Mean AP50 & FAN $-$ baseline & FAN wins & $>$ No Adapt \\\\", "\\midrule"]
 g = W["gaussian_smooth"]
 g_na3 = sum(g3[c] > m3(c, "no_adapt") for c in C); out["gauss3_beats_noadapt"] = g_na3
 S.append(f"Gaussian smoothing & 3 & {out['gauss3_mean']:.2f} & {g['mean']:+.2f} ($p = {g['p']:.2f}$) & {g['wins']}/15 & {g_na3}/15 \\\\")
